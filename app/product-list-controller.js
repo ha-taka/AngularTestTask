@@ -28,45 +28,11 @@ myApp.controller('ProductListCtrl', function() {
     };
 
     this.edit = function(index) {
-        this.Name = this.products[index].Name;
-        this.SKU = this.products[index].SKU;
-        this.Price = this.products[index].Price;
+        this.selectedName = this.products[index].Name;
+        this.selectedSKU = this.products[index].SKU;
+        this.selectedPrice = this.products[index].Price;
 
-        this.editing = true;
         this.selectedIndex = index;
-    };
-
-    this.update = function(index) {
-        this.products[index].Name = this.Name;
-        this.products[index].SKU = this.SKU;
-        this.products[index].Price = this.Price;
-
-        this.clearFields();
-        this.editing = false;
-        this.selectedIndex = -1;
-    };
-
-    this.add = function() {
-        this.products.push({'Name': this.Name, 'SKU': this.SKU, 'Price': this.Price});
-        this.clearFields();
-    };
-
-    this.isUnique = function(key, value) {
-        for (var i = 0; i < this.products.length; i++) {
-            if (i !== this.selectedIndex && this.products[i][key] === value) {
-                return false;
-            }
-        }
-
-        return true;
-    };
-
-    this.clearFields = function() {
-        this.Name="";
-        this.SKU="";
-        this.Price="";
-
-    //    this.inputform.$setPristine();
     };
 
     this.export = function() {

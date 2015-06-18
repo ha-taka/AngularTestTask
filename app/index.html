@@ -4,11 +4,14 @@
 <!--[if IE 8]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html lang="en" ng-app="myApp" class="no-js"> <!--<![endif]-->
 <head>
-<link rel="stylesheet" href="app.css">
-<script src="bower_components/angular/angular.js"></script>
+<link rel="stylesheet" href="resources/app.css">
+<script src="lib/angular.js"></script>
+<script src="lib/ui-bootstrap-tpls-0.13.0.min.js"></script>
 <script src="app.js"></script>
-<script src="controller.js"></script>
+<script src="product-list-controller.js"></script>
+<script src="modal-controller.js"></script>
 <script src="directive.js"></script>
+<link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body ng-controller="ProductListCtrl as main">
 
@@ -31,29 +34,42 @@
      </tr>
 </table>
 
-<br><br><br>
-<form name="inputform">
-Title:<input type="text" name="Name" ng-model="main.Name" required/>
-<span class="error" ng-show="inputform.Name.$dirty && inputform.Name.$error.required">Name is required</span><br>
-SKU:<input type="text" name="SKU" ng-model="main.SKU" index=main.selectedIndex items=main.products required unique-field />
-<span class="error" ng-show="inputform.SKU.$dirty && inputform.SKU.$error.required">SKU is required</span>
-<span class="error" ng-show="inputform.SKU.$error.unique">SKU needs to be unique</span><br>
-Price:<input type="text" name="Price" ng-model="main.Price" required ng-pattern="/^\d+\.?\d*$/"/>
-<span class="error" ng-show="inputform.Price.$dirty && inputform.Price.$error.required">Price is required</span><br>
-<span class="error" ng-show="inputform.Price.$dirty && inputform.Price.$error.pattern">Price must be positive number</span><br>
-<button ng-click="main.add()" ng-disabled=inputform.$invalid ng-hide="main.editing" >Add</button>
-<button ng-click="main.update(main.selectedIndex)" ng-disabled=inputform.$invalid ng-show="main.editing" >Update</button>
-</form>
+<input hidden type="text" ng-model="main.selectedName"/>
+<input hidden type="text" ng-model="main.selectedSKU" />
+<input hidden type="text" ng-model="main.selectedPrice" />
 
-<br><br><br>
-<button ng-click="main.export()">Export</button>
+<br>
 
-  <!--[if lt IE 7]>
-      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-  <![endif]-->
+<div ng-controller="ModalCtrl">
+    <script type="text/ng-template" id="modalDialog.html">
+        <div class="modal-header">
+            <h3 ng-hide="edited"" class="modal-title">Add an item</h3>
+            <h3 ng-show="edited" class="modal-title">Edit an item</h3>
+        </div>
+        <div class="modal-body">
+            <form name="inputform">
+                Name:<input type="text" name="Name" ng-model="Name" required/>
+                <span class="error" ng-show="inputform.Name.$dirty && inputform.Name.$error.required">Name is required</span><br>
+                SKU:<input type="text" name="SKU" ng-model="SKU" index=main.selectedIndex items=main.products required unique-field />
+                <span class="error" ng-show="inputform.SKU.$dirty && inputform.SKU.$error.required">SKU is required</span>
+                <span class="error" ng-show="inputform.SKU.$error.unique">SKU needs to be unique</span><br>
+                Price:<input type="text" name="Price" ng-model="Price" required ng-pattern="/^\d+\.?\d*$/"/>
+                <span class="error" ng-show="inputform.Price.$dirty && inputform.Price.$error.required">Price is required</span><br>
+                <span class="error" ng-show="inputform.Price.$dirty && inputform.Price.$error.pattern">Price must be positive number</span><br>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" ng-disabled=inputform.$invalid ng-click="ok()">Ok</button>
+            <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+        </div>
+    </script>
 
-  <!-- In production use:
-  <script src="//ajax.googleapis.com/ajax/libs/angularjs/x.x.x/angular.min.js"></script>
-  -->
+    <button class="btn btn-default" ng-show="$parent.main.selectedIndex === -1" ng-click="open()">Add</button>
+    <button class="btn btn-default" ng-hide="$parent.main.selectedIndex === -1" ng-click="open()">Edit</button>
+</div>
+
+<br>
+<button class="btn" ng-click="main.export()">Export</button>
+
 </body>
 </html>
